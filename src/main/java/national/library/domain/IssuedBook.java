@@ -24,6 +24,16 @@ public class IssuedBook {
     @JoinColumn (name= "employeeID")
     private Employee employee;
 
+    private Boolean isReturned;
+
+    public Boolean getReturned() {
+        return isReturned;
+    }
+
+    public void setReturned(Boolean returned) {
+        isReturned = returned;
+    }
+
     public Integer getIssueID() {
         return issueID;
     }

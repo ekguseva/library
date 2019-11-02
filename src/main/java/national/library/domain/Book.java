@@ -1,7 +1,7 @@
 package national.library.domain;
 
 import javax.persistence.*;
-import java.time.Year;
+import java.util.Date;
 
 @Entity
 @Table
@@ -9,6 +9,7 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer bookID;
+
     private String ISBN;
     private String name;
 
@@ -24,7 +25,7 @@ public class Book {
     @JoinColumn (name= "publishingID")
     private Publishing publishing;
 
-    private Year yearOfPublication;
+    private Date yearOfPublication;
     private Integer numberOfAvailable;
 
     public Integer getBookID() {
@@ -33,6 +34,10 @@ public class Book {
 
     public void setBookID(Integer bookID) {
         this.bookID = bookID;
+    }
+
+    public String getISBN() {
+        return ISBN;
     }
 
     public void setISBN(String ISBN) {
@@ -47,16 +52,12 @@ public class Book {
         this.name = name;
     }
 
-    public Year getYearOfPublication() {
+    public Date getYearOfPublication() {
         return yearOfPublication;
     }
 
-    public void setYearOfPublication(Year yearOfPublication) {
+    public void setYearOfPublication(Date yearOfPublication) {
         this.yearOfPublication = yearOfPublication;
-    }
-
-    public Integer getNumberOfAvailable() {
-        return numberOfAvailable;
     }
 
     public Author getAuthor() {
@@ -81,6 +82,10 @@ public class Book {
 
     public void setPublishing(Publishing publishing) {
         this.publishing = publishing;
+    }
+
+    public Integer getNumberOfAvailable() {
+        return numberOfAvailable;
     }
 
     public void setNumberOfAvailable(Integer numberOfAvailable) {

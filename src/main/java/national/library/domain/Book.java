@@ -8,7 +8,8 @@ import java.time.Year;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer ISBN;
+    private Integer bookID;
+    private String ISBN;
     private String name;
 
     @ManyToOne
@@ -26,11 +27,15 @@ public class Book {
     private Year yearOfPublication;
     private Integer numberOfAvailable;
 
-    public Integer getISBN() {
-        return ISBN;
+    public Integer getBookID() {
+        return bookID;
     }
 
-    public void setISBN(Integer ISBN) {
+    public void setBookID(Integer bookID) {
+        this.bookID = bookID;
+    }
+
+    public void setISBN(String ISBN) {
         this.ISBN = ISBN;
     }
 

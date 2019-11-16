@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+
+<html lang="RU">
+
+<body>
+<div>Список книг</div>
+<form method="post" action="filter">
+    <input type="text" name="nameFilter" placeholder="Название">
+    <input type="text" name="authorFilter" placeholder="Автор">
+    <input type="text" name="genreFilter" placeholder="Жанр">
+    <button type="submit">Найти</button>
+</form>
+{{#books}}
+    <div>
+        <b>{{bookID}}</b>
+        <span>{{ISBN}}</span>
+        <span>{{name}}</span>
+        <span>{{author.name}}</span>
+        <span>{{genre.name}}</span>
+        <span>{{publishing.name}}</span>
+        <span>{{yearOfPublication}}</span>
+        <b>{{numberOfAvailable}}</b>
+    </div>
+{{/books}}
+</body>
+</html>

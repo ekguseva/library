@@ -1,26 +1,41 @@
 package national.library.controller;
 
+import national.library.domain.Author;
 import national.library.domain.Book;
+import national.library.domain.Genre;
+import national.library.repository.AuthorRepo;
 import national.library.repository.BookRepo;
+import national.library.repository.GenreRepo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@RestController
-@RequestMapping("book")
+@Controller
+@RequestMapping("books")
 public class BookController {
     private final BookRepo bookRepo;
-
-    @Autowired
-    public BookController(BookRepo bookRepo) {
-        this.bookRepo = bookRepo;
-    }
+    private final AuthorRepo authorRepo;
+    private final GenreRepo genreRepo;
 
     @GetMapping
-    public List list() {
-        return bookRepo.findAll();
+    public String bookList(
+            Map<String, Object> model
+    ) {
+        Iterable<Book> books= bookRepo.findAll();
+
+        model.put("books", books);
+        return "bookList";
+    }
+
+    @Autowired
+    public BookController(BookRepo bookRepo, AuthorRepo authorRepo, GenreRepo genreRepo) {
+        this.bookRepo = bookRepo;
+        this.authorRepo = authorRepo;
+        this.genreRepo = genreRepo;
     }
 
     @GetMapping("{bookID}")
@@ -44,5 +59,23 @@ public class BookController {
     @DeleteMapping ("{bookID}")
     public void delete( @PathVariable("bookID") Book book) {
         bookRepo.delete(book);
+    }
+
+    @PostMapping("filter")
+    public String filter(@RequestParam String nameFilter, @RequestParam String authorFilter,@RequestParam String genreFilter, Map<String,Object> model)
+    {
+        Iterable<Book> books;
+        Author author = authorRepo.findByName(authorFilter);
+        Genre genre = genreRepo.findByName(genreFilter);
+
+        if (nameFilter != null && !nameFilter.isEmpty())
+        {
+           books = bookRepo.findByNameAndAuthorAndGenre(nameFilter, author, genre);
+        } else {
+            books = bookRepo.findAll();
+        }
+
+        model.put("books",books);
+        return "bookList";
     }
 }

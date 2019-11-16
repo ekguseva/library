@@ -1,26 +1,59 @@
-<!DOCTYPE HTML>
-
+<!DOCTYPE html>
 <html lang="RU">
-
-<body>
-<div>Список книг</div>
-<form method="post" action="filter">
+<head>
+    <meta charset="utf-8">
+    <title>Список книг библиотеки</title>
+    <style>
+        .nameOfPage {
+            text-align:  center;
+            color: #4682B4;
+        }
+        .filter {
+            text-align:  center;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 1500px; /* Ширина таблицы */
+            border: 3px solid darkblue; /* Рамка вокруг таблицы */
+            margin: auto; /* Выравниваем таблицу по центру окна  */
+        }
+        td {
+            text-align: center; /* Выравниваем текст по центру ячейки */
+        }
+    </style>
+</head>
+<body bgcolor="#e6f3f8">
+<h1 class="nameOfPage">Список книг</h1>
+<form method="post" action="filter" class="filter">
     <input type="text" name="nameFilter" placeholder="Название">
     <input type="text" name="authorFilter" placeholder="Автор">
     <input type="text" name="genreFilter" placeholder="Жанр">
     <button type="submit">Найти</button>
 </form>
+    <table border="1">
+        <tr>
+            <th>Номер в списке</th>
+            <th>ISBN</th>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Жанр</th>
+            <th>Издательство</th>
+            <th>Дата</th>
+            <th>Количество</th>
+        </tr>
+
 {{#books}}
-    <div>
-        <b>{{bookID}}</b>
-        <span>{{ISBN}}</span>
-        <span>{{name}}</span>
-        <span>{{author.name}}</span>
-        <span>{{genre.name}}</span>
-        <span>{{publishing.name}}</span>
-        <span>{{yearOfPublication}}</span>
-        <b>{{numberOfAvailable}}</b>
-    </div>
+        <tr><td>{{bookID}}</td>
+            <td>{{ISBN}}</td>
+            <td>{{name}}</td>
+            <td>{{author.name}}</td>
+            <td>{{genre.name}}</td>
+            <td>{{publishing.name}}</td>
+            <td>{{yearOfPublication}}</td>
+            <td>{{numberOfAvailable}}</td>
+        </tr>
 {{/books}}
+    </table>
+
 </body>
 </html>

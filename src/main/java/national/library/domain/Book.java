@@ -1,11 +1,22 @@
 package national.library.domain;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@FilterDef(name="bookFilter", parameters={
+        @ParamDef( name="name", type="String" ),
+        @ParamDef( name="author", type="integer" ),
+        @ParamDef( name="genre", type="integer")
+})
 @Table
 public class Book {
+    @Filter(name="bookFilter", condition=":name = name and :authorId = author and :genreId = genre")
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer bookID;
@@ -27,6 +38,20 @@ public class Book {
 
     private Date yearOfPublication;
     private Integer numberOfAvailable;
+
+    public Book(){
+
+    }
+
+    public Book(String ISBN, String name, Author author, Genre genre, Publishing publishing, Date yearOfPublication, Integer numberOfAvailable) {
+        this.ISBN = ISBN;
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+        this.publishing = publishing;
+        this.yearOfPublication = yearOfPublication;
+        this.numberOfAvailable = numberOfAvailable;
+    }
 
     public Integer getBookID() {
         return bookID;

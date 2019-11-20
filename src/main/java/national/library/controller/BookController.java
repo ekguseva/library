@@ -1,11 +1,13 @@
 package national.library.controller;
 
-import national.library.domain.Author;
 import national.library.domain.Book;
-import national.library.domain.Genre;
 import national.library.repository.AuthorRepo;
 import national.library.repository.BookRepo;
 import national.library.repository.GenreRepo;
+import org.hibernate.Filter;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,20 +64,29 @@ public class BookController {
     }
 
     @PostMapping("filter")
-    public String filter(@RequestParam String nameFilter, @RequestParam String authorFilter,@RequestParam String genreFilter, Map<String,Object> model)
+    public String filter(@RequestParam String nameFilter, @RequestParam String authorFilter, @RequestParam String genreFilter, Map<String,Object> model)
     {
-        Iterable<Book> books;
-        Author author = authorRepo.findByName(authorFilter);
-        Genre genre = genreRepo.findByName(genreFilter);
-
-        if (nameFilter != null && !nameFilter.isEmpty())
+        //Iterable<Book> books;
+        Integer author = authorRepo.findByName(authorFilter).getAuthorID();
+        Integer genre = genreRepo.findByName(genreFilter).getGenreID();
+        //Session session = HibernateUtil.getSessionFactory().openSession();
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        Filter filter = session.enableFilter("bookFilter");
+        filter.setParameter("name", nameFilter);
+        filter.setParameter("author", author);
+        filter.setParameter("genre", genre);
+        session.beginTransaction();
+        List<Book> books = session.createQuery("FROM Book").list();
+        /*if (nameFilter != null && !nameFilter.isEmpty())
         {
-           books = bookRepo.findByNameAndAuthorAndGenre(nameFilter, author, genre);
+            books = bookRepo.findByNameAndAuthorAndGenre(nameFilter, author, genre);
         } else {
             books = bookRepo.findAll();
-        }
-
-        model.put("books",books);
+        }*/
+        session.disableFilter("bookFilter");
+        model.put("books", books);
+        session.close();
         return "bookList";
     }
 }

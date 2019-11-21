@@ -8,15 +8,14 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table
 @FilterDef(name="bookFilter", parameters={
         @ParamDef( name="name", type="String" ),
         @ParamDef( name="author", type="integer" ),
         @ParamDef( name="genre", type="integer")
 })
-@Table
+@Filter(name="bookFilter", condition=":name = name and :author = authorId and :genre = genreId")
 public class Book {
-    @Filter(name="bookFilter", condition=":name = name and :authorId = author and :genreId = genre")
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer bookID;

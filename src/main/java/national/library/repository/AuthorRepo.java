@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface AuthorRepo extends JpaRepository <Author,Integer> {
     Author findByName(String name);
+    Author findByAuthorID(Integer id);
 }

@@ -23,11 +23,18 @@
     </style>
 </head>
 <body bgcolor="#e6f3f8">
+<div>
+    <form action="/logout" method="post">
+        <input type="submit" value="Sign Out"/>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    </form>
+</div>
 <h1 class="nameOfPage">Список книг</h1>
 <form method="post" action="/books/filter" class="filter">
     <input type="text" name="nameFilter" placeholder="Название">
     <input type="text" name="authorFilter" placeholder="Автор">
     <input type="text" name="genreFilter" placeholder="Жанр">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
     <button type="submit">Найти</button>
 </form>
     <table border="1">

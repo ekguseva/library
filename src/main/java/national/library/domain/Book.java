@@ -5,7 +5,6 @@ import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table
@@ -35,14 +34,14 @@ public class Book {
     @JoinColumn (name= "publishingID")
     private Publishing publishing;
 
-    private Date yearOfPublication;
+    private Integer yearOfPublication;
     private Integer numberOfAvailable;
 
     public Book(){
 
     }
 
-    public Book(String ISBN, String name, Author author, Genre genre, Publishing publishing, Date yearOfPublication, Integer numberOfAvailable) {
+    public Book(String ISBN, String name, Author author, Genre genre, Publishing publishing, Integer yearOfPublication, Integer numberOfAvailable) {
         this.ISBN = ISBN;
         this.name = name;
         this.author = author;
@@ -76,11 +75,11 @@ public class Book {
         this.name = name;
     }
 
-    public Date getYearOfPublication() {
+    public Integer getYearOfPublication() {
         return yearOfPublication;
     }
 
-    public void setYearOfPublication(Date yearOfPublication) {
+    public void setYearOfPublication(Integer yearOfPublication) {
         this.yearOfPublication = yearOfPublication;
     }
 

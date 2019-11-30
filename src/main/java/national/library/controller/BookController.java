@@ -23,14 +23,19 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("books")
+@RequestMapping
 public class BookController {
     private final BookRepo bookRepo;
     private final AuthorRepo authorRepo;
     private final GenreRepo genreRepo;
     private final PublishingRepo publishingRepo;
 
-    @GetMapping
+    @GetMapping("/")
+    public String main(Map<String, Object> model) {
+        return "main";
+    }
+
+    @GetMapping("/books")
     public String bookList(
             Map<String, Object> model
     ) {
@@ -48,7 +53,7 @@ public class BookController {
         this.publishingRepo = publishingRepo;
     }
 
-    @GetMapping("{bookID}")
+    @GetMapping("books/{bookID}")
     public Book getOne(@PathVariable("bookID") Book book) {
         return book;
     }
@@ -58,7 +63,7 @@ public class BookController {
         return bookRepo.save(book);
     }
 
-    @PutMapping ("{bookID}")
+    @PutMapping ("books/{bookID}")
     public Book update(
             @PathVariable("bookID") Book bookFromDB,
             @RequestBody Book book) {
@@ -66,13 +71,13 @@ public class BookController {
         return bookRepo.save(book);
     }
 
-    @DeleteMapping ("{bookID}")
+    @DeleteMapping ("books/{bookID}")
     public void delete( @PathVariable("bookID") Book book) {
         bookRepo.delete(book);
     }
 
 
-    @PostMapping("filter")
+    @PostMapping("books/filter")
     public String filter(@RequestParam String nameFilter, @RequestParam String authorFilter, @RequestParam String genreFilter, Map<String,Object> model)
     {
         StringBuilder selectQuery = new StringBuilder();
@@ -115,7 +120,7 @@ public class BookController {
             Genre g = genreRepo.findByGenreID(rs.getInt("genreID"));
             Publishing p = publishingRepo.findByPublishingID(rs.getInt("publishingID"));
             return new Book(rs.getString("ISBN"), rs.getString("name"),a,g,p,
-                    rs.getDate("year_of_publication"),rs.getInt("number_of_available"));
+                    rs.getInt("year_of_publication"),rs.getInt("number_of_available"));
         });
         model.put("books", books);
         return "bookList";

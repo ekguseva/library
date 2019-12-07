@@ -55,7 +55,7 @@ public class IssuedBookController {
             Book book = bookRepo.findByBookID(rs.getInt("bookID"));
             Reader reader = readerRepo.findByLibraryCardID(rs.getInt("library_cardID"));
             Employee employee = employeeRepo.findByEmployeeID(rs.getInt("employeeID"));
-            return new IssuedBook(rs.getDate("date"), book, reader, employee);
+            return new IssuedBook(rs.getDate("date"), book, reader, employee,rs.getInt("issueID"));
         });
 
 
@@ -72,6 +72,17 @@ public class IssuedBookController {
     public IssuedBook create(@RequestBody IssuedBook issuedBook) {
         return issuedBookRepo.save(issuedBook);
     }*/
+
+    @GetMapping("/bookBack")
+    public String bookBack (@RequestParam Integer issueID, Model model)
+    {
+        IssuedBook issuedBook = issuedBookRepo.findByIssueID(issueID);
+        issuedBook.setReturned(true);
+        issuedBookRepo.save(issuedBook);
+        List<IssuedBook> issuedBooks = issuedBookRepo.findByIsReturnedFalse();
+        model.addAttribute("issuedBooks", issuedBooks);
+        return "issuedBookList";
+    }
 
     @PutMapping ("/issuedBooks/{issueID}")
     public IssuedBook update(

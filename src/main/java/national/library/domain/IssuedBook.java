@@ -30,11 +30,12 @@ public class IssuedBook {
 
     }
 
-    public IssuedBook(Date date, Book book, Reader reader, Employee employee) {
+    public IssuedBook(Date date, Book book, Reader reader, Employee employee, Integer issueID) {
         this.date = date;
         this.book = book;
         this.reader = reader;
         this.employee = employee;
+        this.issueID = issueID;
     }
 
     public Boolean getReturned() {

@@ -35,9 +35,9 @@ public class IssuedBookController {
 
     @PutMapping ("{issueID}")
     public IssuedBook update(
-            @PathVariable("issueID") IssuedBook issuedBookFromBD,
+            @PathVariable("issueID") IssuedBook issuedBookFromDB,
             @RequestBody IssuedBook issuedBook) {
-        BeanUtils.copyProperties(issuedBook,issuedBookFromBD,"issueID");
+        BeanUtils.copyProperties(issuedBook, issuedBookFromDB,"issueID");
         return issuedBookRepo.save(issuedBook);
     }
 

@@ -12,13 +12,12 @@ public class IssuedBook {
     private Date date;
 
     @ManyToOne
-    @JoinColumn (name= "ISBN")
+    @JoinColumn (name= "bookID")
     private Book book;
 
     @ManyToOne
     @JoinColumn (name= "readerID")
     private Reader reader ;
-
 
     @ManyToOne
     @JoinColumn (name= "employeeID")

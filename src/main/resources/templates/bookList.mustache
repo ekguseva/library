@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="RU">
+<head>
+    <meta charset="utf-8">
+    <title>Список книг библиотеки</title>
+    <style>
+        .nameOfPage {
+            text-align:  center;
+            color: #4682B4;
+        }
+        .filter {
+            text-align:  center;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 1500px; /* Ширина таблицы */
+            border: 3px solid darkblue; /* Рамка вокруг таблицы */
+            margin: auto; /* Выравниваем таблицу по центру окна  */
+        }
+        td {
+            text-align: center; /* Выравниваем текст по центру ячейки */
+        }
+    </style>
+</head>
+<body bgcolor="#e6f3f8">
+<div>
+    <form action="/logout" method="post">
+        <input type="submit" value="Sign Out"/>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    </form>
+</div>
+<h1 class="nameOfPage">Список книг</h1>
+<form method="get" action="/books" class="filter">
+    <input type="text" name="nameFilter" placeholder="Название">
+    <input type="text" name="authorFilter" placeholder="Автор">
+    <input type="text" name="genreFilter" placeholder="Жанр">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    <button type="submit">Найти</button>
+</form>
+    <table border="1">
+        <tr>
+            <th>ISBN</th>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Жанр</th>
+            <th>Издательство</th>
+            <th>Дата</th>
+            <th>Количество</th>
+        </tr>
+
+{{#books}}
+            <td>{{ISBN}}</td>
+            <td>{{name}}</td>
+            <td>{{author.name}}</td>
+            <td>{{genre.name}}</td>
+            <td>{{publishing.name}}</td>
+            <td>{{yearOfPublication}}</td>
+            <td>{{numberOfAvailable}}</td>
+        </tr>
+{{/books}}
+    </table>
+
+</body>
+</html>

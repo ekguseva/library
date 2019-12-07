@@ -36,9 +36,9 @@ public class ReaderController {
 
     @PutMapping ("{libraryCardID}")
     public Reader update(
-            @PathVariable("libraryCardID") Reader readerFromBD,
+            @PathVariable("libraryCardID") Reader readerFromDB,
             @RequestBody Reader reader) {
-        BeanUtils.copyProperties(reader,readerFromBD,"libraryCardID");
+        BeanUtils.copyProperties(reader, readerFromDB,"libraryCardID");
         return readerRepo.save(reader);
     }
 

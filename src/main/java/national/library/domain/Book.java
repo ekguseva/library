@@ -1,14 +1,25 @@
 package national.library.domain;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
 import javax.persistence.*;
-import java.time.Year;
 
 @Entity
 @Table
+@FilterDef(name="bookFilter", parameters={
+        @ParamDef( name="name", type="String" ),
+        @ParamDef( name="author", type="integer" ),
+        @ParamDef( name="genre", type="integer")
+})
+@Filter(name="bookFilter", condition=":name = name and :author = authorId and :genre = genreId")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer ISBN;
+    private Integer bookID;
+
+    private String ISBN;
     private String name;
 
     @ManyToOne
@@ -23,14 +34,36 @@ public class Book {
     @JoinColumn (name= "publishingID")
     private Publishing publishing;
 
-    private Year yearOfPublication;
+    private Integer yearOfPublication;
     private Integer numberOfAvailable;
 
-    public Integer getISBN() {
+    public Book(){
+
+    }
+
+    public Book(String ISBN, String name, Author author, Genre genre, Publishing publishing, Integer yearOfPublication, Integer numberOfAvailable) {
+        this.ISBN = ISBN;
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+        this.publishing = publishing;
+        this.yearOfPublication = yearOfPublication;
+        this.numberOfAvailable = numberOfAvailable;
+    }
+
+    public Integer getBookID() {
+        return bookID;
+    }
+
+    public void setBookID(Integer bookID) {
+        this.bookID = bookID;
+    }
+
+    public String getISBN() {
         return ISBN;
     }
 
-    public void setISBN(Integer ISBN) {
+    public void setISBN(String ISBN) {
         this.ISBN = ISBN;
     }
 
@@ -42,16 +75,12 @@ public class Book {
         this.name = name;
     }
 
-    public Year getYearOfPublication() {
+    public Integer getYearOfPublication() {
         return yearOfPublication;
     }
 
-    public void setYearOfPublication(Year yearOfPublication) {
+    public void setYearOfPublication(Integer yearOfPublication) {
         this.yearOfPublication = yearOfPublication;
-    }
-
-    public Integer getNumberOfAvailable() {
-        return numberOfAvailable;
     }
 
     public Author getAuthor() {
@@ -76,6 +105,10 @@ public class Book {
 
     public void setPublishing(Publishing publishing) {
         this.publishing = publishing;
+    }
+
+    public Integer getNumberOfAvailable() {
+        return numberOfAvailable;
     }
 
     public void setNumberOfAvailable(Integer numberOfAvailable) {

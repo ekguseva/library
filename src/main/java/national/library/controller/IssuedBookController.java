@@ -47,6 +47,7 @@ public class IssuedBookController {
             selectQuery.append(libraryCardFilter);
             selectQuery.append("'");
         }
+        selectQuery.append(" ORDER BY issueID ASC");
 
         String finalQuery = selectQuery.toString();
 
@@ -68,16 +69,18 @@ public class IssuedBookController {
         return issuedBook;
     }
 
-    /*PostMapping
+    @PostMapping("/issuedBooks")
     public IssuedBook create(@RequestBody IssuedBook issuedBook) {
         return issuedBookRepo.save(issuedBook);
-    }*/
+    }
 
     @GetMapping("/bookBack")
     public String bookBack (@RequestParam Integer issueID, Model model)
     {
         IssuedBook issuedBook = issuedBookRepo.findByIssueID(issueID);
         issuedBook.setReturned(true);
+        Book book = issuedBook.getBook();
+        book.setNumberOfAvailable(book.getNumberOfAvailable()+1);
         issuedBookRepo.save(issuedBook);
         List<IssuedBook> issuedBooks = issuedBookRepo.findByIsReturnedFalse();
         model.addAttribute("issuedBooks", issuedBooks);

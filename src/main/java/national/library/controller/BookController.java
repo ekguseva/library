@@ -1,13 +1,7 @@
 package national.library.controller;
 
-import national.library.domain.Author;
-import national.library.domain.Book;
-import national.library.domain.Genre;
-import national.library.domain.Publishing;
-import national.library.repository.AuthorRepo;
-import national.library.repository.BookRepo;
-import national.library.repository.GenreRepo;
-import national.library.repository.PublishingRepo;
+import national.library.domain.*;
+import national.library.repository.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +20,9 @@ public class BookController {
     private final AuthorRepo authorRepo;
     private final GenreRepo genreRepo;
     private final PublishingRepo publishingRepo;
+    private final EmployeeRepo employeeRepo;
+    private final ReaderRepo readerRepo;
+    private final IssuedBookRepo issuedBookRepo;
     private final DataSource dataSource;
 
     @GetMapping("/")
@@ -85,17 +83,36 @@ public class BookController {
     }
 
     @Autowired
-    public BookController(BookRepo bookRepo, AuthorRepo authorRepo, GenreRepo genreRepo, PublishingRepo publishingRepo, DataSource dataSource) {
+    public BookController(BookRepo bookRepo, AuthorRepo authorRepo, GenreRepo genreRepo, PublishingRepo publishingRepo, EmployeeRepo employeeRepo, ReaderRepo readerRepo, IssuedBookRepo issuedBookRepo, DataSource dataSource) {
         this.bookRepo = bookRepo;
         this.authorRepo = authorRepo;
         this.genreRepo = genreRepo;
         this.publishingRepo = publishingRepo;
+        this.employeeRepo = employeeRepo;
+        this.readerRepo = readerRepo;
+        this.issuedBookRepo = issuedBookRepo;
         this.dataSource = dataSource;
     }
 
     @GetMapping("books/{bookID}")
     public Book getOne(@PathVariable("bookID") Book book) {
         return book;
+    }
+
+    @GetMapping("/giveBook")
+    public String giveBook (@RequestParam Integer bookID,@RequestParam Integer libraryCardID, Model model) {
+        IssuedBook issuedBook = new IssuedBook();
+        Book book = bookRepo.findByBookID(bookID);
+        issuedBook.setDate(new Date());
+        issuedBook.setBook(book);
+        book.setNumberOfAvailable(book.getNumberOfAvailable()-1);
+        issuedBook.setReader(readerRepo.findByLibraryCardID(libraryCardID));
+        issuedBook.setEmployee(employeeRepo.findByEmployeeID(7));
+        issuedBook.setReturned(false);
+        issuedBookRepo.save(issuedBook);
+        List<Book> books = bookRepo.findAll();
+        model.addAttribute("books", books);
+        return "bookList";
     }
 
     /*@PostMapping

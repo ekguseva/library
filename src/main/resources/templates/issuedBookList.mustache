@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="RU">
+<head>
+    <meta charset="utf-8">
+    <title>Список взятых книг библиотеки</title>
+    <style>
+        .nameOfPage {
+            text-align:  center;
+            color: #4682B4;
+        }
+        .filter {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 1500px; /* Ширина таблицы */
+            border: 3px solid darkblue; /* Рамка вокруг таблицы */
+            margin: auto; /* Выравниваем таблицу по центру окна  */
+        }
+        td {
+            text-align: center; /* Выравниваем текст по центру ячейки */
+        }
+    </style>
+</head>
+<body bgcolor="#e6f3f8">
+<div>
+    <form action="/logout" method="post">
+        <input type="submit" value="Sign Out"/>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    </form>
+</div>
+<h1 class="nameOfPage">Список выданных книг</h1>
+<form method="get" action="/issuedBooks" class="filter">
+    <input size=30px type="text" name="libraryCardFilter" placeholder="Номер читательского билета">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    <button type="submit">Найти</button>
+</form>
+    <table border="1">
+        <tr>
+            <th>Название книги</th>
+            <th>Читатель</th>
+            <th>Сотрудник</th>
+            <th>Дата выдачи</th>
+        </tr>
+{{#issuedBooks}}
+            <td>{{book.name}}</td>
+            <td>{{reader.fullName}}</td>
+            <td>{{employee.username}}</td>
+            <td>{{date}}</td>
+        </tr>
+{{/issuedBooks}}
+    </table>
+</body>
+</html>

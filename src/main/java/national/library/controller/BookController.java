@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping
 public class BookController {
     private final BookRepo bookRepo;
     private final AuthorRepo authorRepo;
@@ -99,10 +98,10 @@ public class BookController {
         return book;
     }
 
-    @PostMapping
+    /*@PostMapping
     public Book create(@RequestBody Book book) {
         return bookRepo.save(book);
-    }
+    }*/
 
     @PutMapping ("books/{bookID}")
     public Book update(

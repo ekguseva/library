@@ -8,12 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @Table
-@FilterDef(name="bookFilter", parameters={
-        @ParamDef( name="name", type="String" ),
-        @ParamDef( name="author", type="integer" ),
-        @ParamDef( name="genre", type="integer")
-})
-@Filter(name="bookFilter", condition=":name = name and :author = authorId and :genre = genreId")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -16,7 +16,7 @@ public class IssuedBook {
     private Book book;
 
     @ManyToOne
-    @JoinColumn (name= "readerID")
+    @JoinColumn (name= "libraryCardID")
     private Reader reader ;
 
     @ManyToOne
@@ -24,6 +24,18 @@ public class IssuedBook {
     private Employee employee;
 
     private Boolean isReturned;
+
+    public IssuedBook()
+    {
+
+    }
+
+    public IssuedBook(Date date, Book book, Reader reader, Employee employee) {
+        this.date = date;
+        this.book = book;
+        this.reader = reader;
+        this.employee = employee;
+    }
 
     public Boolean getReturned() {
         return isReturned;

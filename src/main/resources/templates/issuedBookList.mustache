@@ -14,8 +14,9 @@
         }
         table {
             width: 1500px; /* Ширина таблицы */
-            border: 3px solid darkblue; /* Рамка вокруг таблицы */
+            border: 3px solid #4682B4; /* Рамка вокруг таблицы */
             margin: auto; /* Выравниваем таблицу по центру окна  */
+            text-align: center;
         }
         td {
             text-align: center; /* Выравниваем текст по центру ячейки */
@@ -45,7 +46,7 @@
     </div>
 
     <form action="/logout" method="post">
-        <button type="submit" class="btn btn-primary">Выйти</button>
+        <button type="submit" class="btn btn-secondary">Выйти</button>
         <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
     </form>
 </nav>
@@ -53,7 +54,7 @@
 <form method="get" action="/issuedBooks" class="filter">
     <input size=30px type="text" name="libraryCardFilter" placeholder="Номер читательского билета">
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-    <button type="submit">Найти</button>
+    <button type="submit" class="btn btn-primary">Найти</button>
 </form>
     <table border="1">
         <tr>
@@ -69,29 +70,9 @@
             <td>{{employee.username}}</td>
             <td>{{date}}</td>
             <td>
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#exampleModal"> Вернуть</button>
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel"> Возвращение книги</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                 Вы уверены?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"> Нет</button>
-                                <form method="get" action="/bookBack" >
-                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-                                    <button type="submit" class="btn btn-primary" name="issueID" value={{issueID}}> Да</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <form method="get" action="/returnCurrentBook" >
+                    <button type="submit" class="btn btn-light" name="issueID" value="{{issueID}}">Вернуть</button>
+                </form>
             </td>
         </tr>
 {{/issuedBooks}}

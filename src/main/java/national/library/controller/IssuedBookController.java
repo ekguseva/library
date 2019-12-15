@@ -37,7 +37,7 @@ public class IssuedBookController {
 
     @GetMapping("/issuedBooks")
     public String issuedBookList(@RequestParam(required = false) String libraryCardFilter,
-                            Model model)
+                                 Model model)
     {
         StringBuilder selectQuery = new StringBuilder();
         selectQuery.append("SELECT * FROM issued_book WHERE is_returned = false");
@@ -74,8 +74,8 @@ public class IssuedBookController {
         return issuedBookRepo.save(issuedBook);
     }
 
-    @GetMapping("/bookBack")
-    public String bookBack (@RequestParam Integer issueID, Model model)
+    @GetMapping("/returnBook")
+    public String returnBook (@RequestParam Integer issueID, Model model)
     {
         IssuedBook issuedBook = issuedBookRepo.findByIssueID(issueID);
         issuedBook.setReturned(true);
@@ -85,6 +85,13 @@ public class IssuedBookController {
         List<IssuedBook> issuedBooks = issuedBookRepo.findByIsReturnedFalse();
         model.addAttribute("issuedBooks", issuedBooks);
         return "issuedBookList";
+    }
+
+    @GetMapping("/returnCurrentBook")
+    public String returnCurrentBook (@RequestParam Integer issueID, Model model) {
+        IssuedBook issuedBook = issuedBookRepo.findByIssueID(issueID);
+        model.addAttribute("issuedBook", issuedBook);
+        return "returnBook";
     }
 
     @PutMapping ("/issuedBooks/{issueID}")

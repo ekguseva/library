@@ -31,9 +31,11 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public String bookList( @RequestParam (required = false) String nameFilter, @RequestParam (required = false) String authorFilter, @RequestParam (required = false) String genreFilter,
-            Model model
-    ) {
+    public String bookList( @RequestParam (required = false) String nameFilter,
+                            @RequestParam (required = false) String authorFilter,
+                            @RequestParam (required = false) String genreFilter,
+                            Model model)
+    {
         StringBuilder selectQuery = new StringBuilder();
         selectQuery.append("SELECT * FROM book WHERE ");
         boolean flagAnd  = false;
@@ -77,7 +79,6 @@ public class BookController {
             return new Book(rs.getString("ISBN"), rs.getString("name"),a,g,p,
                     rs.getInt("year_of_publication"),rs.getInt("number_of_available"));
         });
-
         model.addAttribute("books", books);
         return "bookList";
     }
@@ -100,7 +101,7 @@ public class BookController {
     }
 
     @GetMapping("/giveBook")
-    public String giveBook (@RequestParam Integer bookID,@RequestParam Integer libraryCardID, Model model) {
+    public String giveBook (@RequestParam Integer bookID, @RequestParam Integer libraryCardID, Model model) {
         IssuedBook issuedBook = new IssuedBook();
         Book book = bookRepo.findByBookID(bookID);
         issuedBook.setDate(new Date());
@@ -113,6 +114,13 @@ public class BookController {
         List<Book> books = bookRepo.findAll();
         model.addAttribute("books", books);
         return "bookList";
+    }
+
+    @GetMapping("/giveCurrentBook")
+    public String giveCurrentBook (@RequestParam Integer bookID, Model model) {
+        Book book = bookRepo.findByBookID(bookID);
+        model.addAttribute("book", book);
+        return "giveBook";
     }
 
     /*@PostMapping

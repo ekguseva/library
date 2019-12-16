@@ -108,17 +108,22 @@ public class BookController {
         issuedBook.setBook(book);
         book.setNumberOfAvailable(book.getNumberOfAvailable()-1);
         issuedBook.setReader(readerRepo.findByLibraryCardID(libraryCardID));
-        issuedBook.setEmployee(employeeRepo.findByEmployeeID(7));
+        issuedBook.setEmployee(employeeRepo.findByEmployeeID(1));
         issuedBook.setReturned(false);
         issuedBookRepo.save(issuedBook);
         List<Book> books = bookRepo.findAll();
         model.addAttribute("books", books);
-        return "bookList";
+        return "redirect:/books ";
     }
 
     @GetMapping("/giveCurrentBook")
     public String giveCurrentBook (@RequestParam Integer bookID, Model model) {
         Book book = bookRepo.findByBookID(bookID);
+        if (book.getNumberOfAvailable() == 0) {
+            model.addAttribute("message", "Книги нет в наличии!");
+            model.addAttribute("books", bookRepo.findAll());
+            return "redirect:/books";
+        }
         model.addAttribute("book", book);
         return "giveBook";
     }

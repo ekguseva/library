@@ -59,7 +59,6 @@ public class IssuedBookController {
             return new IssuedBook(rs.getDate("date"), book, reader, employee,rs.getInt("issueID"));
         });
 
-
         model.addAttribute("issuedBooks", issuedBooks);
         return "issuedBookList";
     }

@@ -21,7 +21,7 @@
         .additional_data {
             padding: 10px 10px 10px;
             width: 500px;
-            border: 0px ; /* Рамка */
+            border: 0px; /* Рамка */
             margin: auto;
         }
     </style>
@@ -48,26 +48,25 @@
     </div>
     <form action="/logout" method="post">
         <button type="submit" class="btn btn-secondary">Выйти</button>
-        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+        <input type="hidden" name="_csrf" value="${_csrf.token}" />
     </form>
 </nav>
-<form method="get" action="/books" >
+<form method="get" action="/issuedBooks" >
     <button type="submit" class="btn btn-secondary">Назад</button>
 </form>
-<h1 class="nameOfPage">Выдача книги</h1>
+<h1 class="nameOfPage">Возврат книги</h1>
 <div class="outline">
-    <b>ISBN:</b>  {{book.ISBN}}</p>
-    <b>Название:</b>  {{book.name}}</p>
-    <b>Автор:</b>  {{book.author.name}}</p>
-    <b>Жанр:</b>  {{book.genre.name}}</p>
-    <p><b>Издательство:</b>  {{book.publishing.name}}</p>
-    <p><b>Дата:</b>  {{book.yearOfPublication}}</p>
+    <p><b>ISBN:</b>  ${issuedBook.book.ISBN}</p>
+    <p><b>Название:</b>  ${issuedBook.book.name}</p>
+    <p><b>Автор:</b>  ${issuedBook.book.author.name}</p>
+    <p><b>Жанр:</b>   ${issuedBook.book.genre.name}</p>
+    <p><b>Издательство:</b>   ${issuedBook.book.publishing.name}</p>
+    <p><b>Дата:</b>   ${issuedBook.book.yearOfPublication}</p>
+    <p><b>Читатель:</b>   ${issuedBook.reader.fullName}</p>
 </div>
-<form class="additional_data" method="get" action="/giveBook" >
+<form class="additional_data" method="get" action="/returnBook" >
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-    <div><label><b>Номер читательского: </b><input class="fields" type="text" name="libraryCardID" placeholder="Введите номер читательского" size="39"> </label></div>
-    <p></p>
-    <button type="submit" class="btn btn-primary btn-lg btn-block" name="bookID" value="{{book.bookID}}">Выдать книгу</button>
+    <button type="submit" class="btn btn-primary btn-lg btn-block" name="issueID" value="${issuedBook.issueID}">Подтвердить</button>
 </form>
 </body>
 </html>

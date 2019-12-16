@@ -35,7 +35,8 @@ public class Book {
 
     }
 
-    public Book(String ISBN, String name, Author author, Genre genre, Publishing publishing, Integer yearOfPublication, Integer numberOfAvailable) {
+    public Book(Integer bookID, String ISBN, String name, Author author, Genre genre, Publishing publishing, Integer yearOfPublication, Integer numberOfAvailable) {
+        this.bookID = bookID;
         this.ISBN = ISBN;
         this.name = name;
         this.author = author;

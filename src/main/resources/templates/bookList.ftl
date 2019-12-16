@@ -2,21 +2,21 @@
 <html lang="RU">
 <head>
     <meta charset="utf-8">
-    <title>Список взятых книг библиотеки</title>
+    <title>Список книг библиотеки</title>
     <style>
         .nameOfPage {
             text-align:  center;
             color: #4682B4;
         }
         .filter {
-            text-align: center;
+            text-align:  center;
             margin-bottom: 10px;
         }
         table {
             width: 1500px; /* Ширина таблицы */
             border: 3px solid #4682B4; /* Рамка вокруг таблицы */
             margin: auto; /* Выравниваем таблицу по центру окна  */
-            text-align: center;
+            text-align: center; /* Выравниваем текст по центру ячейки */
         }
         td {
             text-align: center; /* Выравниваем текст по центру ячейки */
@@ -36,10 +36,10 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="/books">Список книг</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="/issuedBooks">Список выданных книг</a>
             </li>
         </ul>
@@ -47,35 +47,52 @@
 
     <form action="/logout" method="post">
         <button type="submit" class="btn btn-secondary">Выйти</button>
-        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+        <input type="hidden" name="_csrf" value="${_csrf.token}" />
     </form>
 </nav>
-<h1 class="nameOfPage">Список выданных книг</h1>
-<form method="get" action="/issuedBooks" class="filter">
-    <input size=30px type="text" name="libraryCardFilter" placeholder="Номер читательского билета">
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+<h1 class="nameOfPage">Список книг</h1>
+<form  method="get" action="/books" class="filter">
+    <input type="text" name="nameFilter" placeholder="Название"/>
+    <input type="text" name="authorFilter" placeholder="Автор"/>
+    <input type="text" name="genreFilter" placeholder="Жанр"/>
     <button type="submit" class="btn btn-primary">Найти</button>
 </form>
     <table border="1">
         <tr>
-            <th>Название книги</th>
-            <th>Читатель</th>
-            <th>Сотрудник</th>
-            <th>Дата выдачи</th>
-            <th>Отметка о возврате</th>
+            <th>ISBN</th>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Жанр</th>
+            <th>Издательство</th>
+            <th>Дата издания</th>
+            <th>Количество</th>
+            <th>Выдача книги</th>
         </tr>
-{{#issuedBooks}}
-            <td>{{book.name}}</td>
-            <td>{{reader.fullName}}</td>
-            <td>{{employee.username}}</td>
-            <td>{{date}}</td>
-            <td>
-                <form method="get" action="/returnCurrentBook" >
-                    <button type="submit" class="btn btn-light" name="issueID" value="{{issueID}}">Вернуть</button>
-                </form>
-            </td>
-        </tr>
-{{/issuedBooks}}
+        <#list books as book>
+            <div>
+                <tr>
+                    <td>${book.ISBN}</td>
+                    <td>${book.name}</td>
+                    <td>${book.author.name}</td>
+                    <td>${book.genre.name}</td>
+                    <td>${book.publishing.name}</td>
+                    <td>#{book.yearOfPublication}</td>
+                    <td>${book.numberOfAvailable}</td>
+                    <td>
+                        <#if book.numberOfAvailable gt 0>
+                            <form method="get" action="/giveCurrentBook">
+                                <input type="hidden" name="bookID" value="#{book.bookID}"/>
+                                <button type="submit" class="btn btn-light">Выдать</button>
+                            </form>
+                        <#else>
+                            <button type="submit" class="btn btn-light" disabled>Выдать</button>
+                        </#if>
+                    </td>
+                </tr>
+            </div>
+        <#else>
+            Книг по запросу не найдено
+        </#list>
     </table>
 </body>
 </html>

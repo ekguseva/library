@@ -76,7 +76,7 @@ public class BookController {
             Author a = authorRepo.findByAuthorID(rs.getInt("authorID"));
             Genre g = genreRepo.findByGenreID(rs.getInt("genreID"));
             Publishing p = publishingRepo.findByPublishingID(rs.getInt("publishingID"));
-            return new Book(rs.getString("ISBN"), rs.getString("name"),a,g,p,
+            return new Book(rs.getInt("bookID"), rs.getString("ISBN"), rs.getString("name"),a,g,p,
                     rs.getInt("year_of_publication"),rs.getInt("number_of_available"));
         });
         model.addAttribute("books", books);

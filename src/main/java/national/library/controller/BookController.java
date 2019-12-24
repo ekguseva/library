@@ -1,31 +1,29 @@
 package national.library.controller;
 
-import national.library.domain.Author;
-import national.library.domain.Book;
-import national.library.domain.Genre;
-import national.library.domain.Publishing;
-import national.library.repository.AuthorRepo;
-import national.library.repository.BookRepo;
-import national.library.repository.GenreRepo;
-import national.library.repository.PublishingRepo;
+import national.library.domain.*;
+import national.library.repository.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping
 public class BookController {
     private final BookRepo bookRepo;
     private final AuthorRepo authorRepo;
     private final GenreRepo genreRepo;
     private final PublishingRepo publishingRepo;
+    private final EmployeeRepo employeeRepo;
+    private final ReaderRepo readerRepo;
+    private final IssuedBookRepo issuedBookRepo;
     private final DataSource dataSource;
 
     @GetMapping("/")
@@ -34,9 +32,11 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public String bookList( @RequestParam (required = false) String nameFilter, @RequestParam (required = false) String authorFilter, @RequestParam (required = false) String genreFilter,
-            Model model
-    ) {
+    public String bookList( @RequestParam (required = false) String nameFilter,
+                            @RequestParam (required = false) String authorFilter,
+                            @RequestParam (required = false) String genreFilter,
+                            Model model)
+    {
         StringBuilder selectQuery = new StringBuilder();
         selectQuery.append("SELECT * FROM book WHERE ");
         boolean flagAnd  = false;
@@ -77,20 +77,22 @@ public class BookController {
             Author a = authorRepo.findByAuthorID(rs.getInt("authorID"));
             Genre g = genreRepo.findByGenreID(rs.getInt("genreID"));
             Publishing p = publishingRepo.findByPublishingID(rs.getInt("publishingID"));
-            return new Book(rs.getString("ISBN"), rs.getString("name"),a,g,p,
+            return new Book(rs.getInt("bookID"), rs.getString("ISBN"), rs.getString("name"),a,g,p,
                     rs.getInt("year_of_publication"),rs.getInt("number_of_available"));
         });
-
         model.addAttribute("books", books);
         return "bookList";
     }
 
     @Autowired
-    public BookController(BookRepo bookRepo, AuthorRepo authorRepo, GenreRepo genreRepo, PublishingRepo publishingRepo, DataSource dataSource) {
+    public BookController(BookRepo bookRepo, AuthorRepo authorRepo, GenreRepo genreRepo, PublishingRepo publishingRepo, EmployeeRepo employeeRepo, ReaderRepo readerRepo, IssuedBookRepo issuedBookRepo, DataSource dataSource) {
         this.bookRepo = bookRepo;
         this.authorRepo = authorRepo;
         this.genreRepo = genreRepo;
         this.publishingRepo = publishingRepo;
+        this.employeeRepo = employeeRepo;
+        this.readerRepo = readerRepo;
+        this.issuedBookRepo = issuedBookRepo;
         this.dataSource = dataSource;
     }
 
@@ -99,10 +101,41 @@ public class BookController {
         return book;
     }
 
-    @PostMapping
+    @GetMapping("/giveBook")
+    public String giveBook (
+            @AuthenticationPrincipal Employee employee,
+            @RequestParam Integer bookID, @RequestParam Integer libraryCardID, Model model) {
+        IssuedBook issuedBook = new IssuedBook();
+        Book book = bookRepo.findByBookID(bookID);
+        issuedBook.setDate(new Date());
+        issuedBook.setBook(book);
+        book.setNumberOfAvailable(book.getNumberOfAvailable()-1);
+        issuedBook.setReader(readerRepo.findByLibraryCardID(libraryCardID));
+        issuedBook.setEmployee(employee);
+        //issuedBook.setEmployee(employeeRepo.findByEmployeeID(7));
+        issuedBook.setReturned(false);
+        issuedBookRepo.save(issuedBook);
+        List<Book> books = bookRepo.findAll();
+        model.addAttribute("books", books);
+        return "redirect:/books ";
+    }
+
+    @GetMapping("/giveCurrentBook")
+    public String giveCurrentBook (@RequestParam Integer bookID, Model model) {
+        Book book = bookRepo.findByBookID(bookID);
+        if (book.getNumberOfAvailable() == 0) {
+            model.addAttribute("message", "Книги нет в наличии!");
+            model.addAttribute("books", bookRepo.findAll());
+            return "redirect:/books";
+        }
+        model.addAttribute("book", book);
+        return "giveBook";
+    }
+
+    /*@PostMapping
     public Book create(@RequestBody Book book) {
         return bookRepo.save(book);
-    }
+    }*/
 
     @PutMapping ("books/{bookID}")
     public Book update(

@@ -1,5 +1,6 @@
 package national.library.config;
 
+import national.library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,8 +14,9 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
-    private DataSource dataSource;
+    private UserService userService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -33,10 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                .usersByUsernameQuery("select username, password, active from employee where username = ?")
-                .authoritiesByUsernameQuery("select u.username, ur.roles from employee u join user_role ur on u.employeeid = ur.user_id where u.username=?");
+        auth.userDetailsService(userService)
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 }

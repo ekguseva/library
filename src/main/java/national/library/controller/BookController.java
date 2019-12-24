@@ -5,6 +5,7 @@ import national.library.repository.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -101,14 +102,17 @@ public class BookController {
     }
 
     @GetMapping("/giveBook")
-    public String giveBook (@RequestParam Integer bookID, @RequestParam Integer libraryCardID, Model model) {
+    public String giveBook (
+            @AuthenticationPrincipal Employee employee,
+            @RequestParam Integer bookID, @RequestParam Integer libraryCardID, Model model) {
         IssuedBook issuedBook = new IssuedBook();
         Book book = bookRepo.findByBookID(bookID);
         issuedBook.setDate(new Date());
         issuedBook.setBook(book);
         book.setNumberOfAvailable(book.getNumberOfAvailable()-1);
         issuedBook.setReader(readerRepo.findByLibraryCardID(libraryCardID));
-        issuedBook.setEmployee(employeeRepo.findByEmployeeID(1));
+        issuedBook.setEmployee(employee);
+        //issuedBook.setEmployee(employeeRepo.findByEmployeeID(7));
         issuedBook.setReturned(false);
         issuedBookRepo.save(issuedBook);
         List<Book> books = bookRepo.findAll();

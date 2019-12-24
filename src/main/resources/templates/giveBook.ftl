@@ -44,6 +44,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="/issuedBooks">Список выданных книг</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/statistics">Статистика</a>
+            </li>
         </ul>
     </div>
     <form action="/logout" method="post">

@@ -42,6 +42,9 @@
             <li class="nav-item active">
                 <a class="nav-link" href="/issuedBooks">Список выданных книг</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/statistics">Статистика</a>
+            </li>
         </ul>
     </div>
 
@@ -50,6 +53,9 @@
         <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
     </form>
 </nav>
+<form  method="get" action="/issuedBooks">f
+    <button type="submit" class="btn btn-outline-primary">Сбросить</button>
+</form>
 <h1 class="nameOfPage">Список выданных книг</h1>
 <form method="get" action="/issuedBooks" class="filter">
     <input size=30px type="text" name="libraryCardFilter" placeholder="Номер читательского билета".>
@@ -60,6 +66,7 @@
         <tr>
             <th>Название книги</th>
             <th>Читатель</th>
+            <th>Номер читательского билета</th>
             <th>Сотрудник</th>
             <th>Дата выдачи</th>
             <th>Отметка о возврате</th>
@@ -69,6 +76,7 @@
         <tr>
             <td>${issuedBook.book.name}</td>
             <td>${issuedBook.reader.fullName}</td>
+            <td>${issuedBook.reader.libraryCardID}</td>
             <td>${issuedBook.employee.username}</td>
             <td>${issuedBook.date}</td>
             <td>

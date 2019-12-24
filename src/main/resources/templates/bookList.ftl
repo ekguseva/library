@@ -42,6 +42,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="/issuedBooks">Список выданных книг</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/statistics">Статистика</a>
+            </li>
         </ul>
     </div>
 
@@ -50,6 +53,9 @@
         <input type="hidden" name="_csrf" value="${_csrf.token}" />
     </form>
 </nav>
+<form  method="get" action="/books">
+    <button type="submit" class="btn btn-outline-primary">Сбросить</button>
+</form>
 <h1 class="nameOfPage">Список книг</h1>
 <form  method="get" action="/books" class="filter">
     <input type="text" name="nameFilter" placeholder="Название"/>
